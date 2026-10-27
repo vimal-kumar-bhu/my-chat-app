@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0f172a] text-slate-100 font-sans p-2 flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-[#1e293b] rounded-xl shadow-lg overflow-hidden border border-slate-800 flex flex-col h-[550px]">
+        
+        <!-- Header -->
+        <div class="bg-[#0f172a] border-b border-slate-800 p-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-sm text-white" id="userAvatar">U</div>
+                <div>
+                    <h2 class="font-semibold text-sm" id="usernameDisplay">Real-Time Chat</h2>
+                    <p class="text-[10px] text-emerald-400"><i class="fa-solid fa-circle text-[6px]"></i> Live Online</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-3 space-y-3 flex flex-col text-sm">
+            <!-- Messages yahan real-time aayenge -->
+        </div>
+
+        <!-- Input Form -->
+        <form id="chatForm" class="bg-[#0f172a] border-t border-slate-800 p-2.5 flex items-center space-x-2">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Type a message..." 
+                autocomplete="off"
+                class="flex-1 bg-slate-900 border border-slate-700 rounded-full px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
+                required
+            >
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white w-9 h-9 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Firebase SDKs (Realtime Database version) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Aapki Firebase Configuration Keys
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9Z8wZE50quV3YER_fYRWyMGOx4nb16J8",
+            authDomain: "my-realtime-chat-1070f.firebaseapp.com",
+            databaseURL: "https://my-realtime-chat-1070f-default-rtdb.firebaseio.com",
+            projectId: "my-realtime-chat-1070f",
+            storageBucket: "my-realtime-chat-1070f.firebasestorage.app",
+            messagingSenderId: "164361933197",
+            appId: "1:164361933197:web:2c1d02d7c9ceb9fc182dc4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // User ka naam pooch lo
+        let myName = prompt("Apna naam enter karein:") || "User";
+        document.getElementById('usernameDisplay').innerText = myName;
+        document.getElementById('userAvatar').innerText = myName.charAt(0).toUpperCase();
+
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('messageInput');
+        const container = document.getElementById('chatContainer');
+
+        // Message Send Karna
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = input.value.trim();
+            if(!text) return;
+
+            const messagesRef = ref(db, 'messages');
+            push(messagesRef, {
+                name: myName,
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            input.value = '';
+        });
+
+        // Real-time Messages Sunna
+        const messagesRef = ref(db, 'messages');
+        onChildAdded(messagesRef, (snapshot) => {
+            const data = snapshot.val();
+            const isMe = data.name === myName;
+            
+            if(isMe) {
+                container.innerHTML += `
+                    <div class="flex justify-end">
+                        <div class="bg-indigo-600 text-white rounded-xl rounded-tr-none p-2.5 max-w-[80%]">
+                            <p class="text-[10px] font-bold text-indigo-200">Aap</p>
+                            <p class="text-xs">${data.text}</p>
+                            <span class="text-[9px] text-indigo-200 mt-0.5 block text-right">${data.time}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 border border-slate-700/50 rounded-xl rounded-tl-none p-2.5 max-w-[80%]">
+                            <p class="text-[10px] font-bold text-emerald-400">${data.name}</p>
+                            <p class="text-xs text-slate-200">${data.text}</p>
+                            <span class="text-[9px] text-slate-400 mt-0.5 block text-right">${data.time}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            container.scrollTop = container.scrollHeight;
+        });
+    </script>
+</body>
+</html>1: Saini SS, Kaplan AP. Chronic Spontaneous Urticaria: The Devil's Itch. J
+Allergy Clin Immunol Pract. 2018 Jul-Aug;6(4):1097-1106. doi:
+10.1016/j.jaip.2018.04.013. PMID: 30033911; PMCID: PMC6061968.
